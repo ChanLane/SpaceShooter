@@ -115,3 +115,4 @@ MonoBehaviour:
   xPosBound: 10
   yNegBound: -4.088
   yPosBound: 4.88
+  laserPrefab: {fileID: 4051635175213276034, guid: 8c35492d0311b6343ba089051deda4eb, type: 3}

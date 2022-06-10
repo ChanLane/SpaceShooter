@@ -1,10 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour 
 {
+ 
+    #region Variables
 
     [SerializeField] private float movementSpeed;
     // Start is called before the first frame update
@@ -21,21 +24,31 @@ public class Player : MonoBehaviour
     [FoldoutGroup("Player Bounds")]
     [SerializeField] private float yPosBound;
 
-    #region Unity
-    void Start()
+    [SerializeField] private GameObject laserPrefab;
+
+    #endregion
+
+    #region UnityMethods
+
+    private void Start()
     {
         transform.position = Vector3.zero;
     }
-    
-    void Update()
+
+    private void Update()
     { 
         HandleMovement();
+       
+    }
+    
+    private void LateUpdate()
+    {
+        HandleLaserFire();
     }
 
     #endregion
 
     #region CustomMethods
-
     private void HandleMovement()
     {
         transform.Translate(GetMovementDirection() * (movementSpeed * Time.deltaTime));
@@ -75,7 +88,16 @@ public class Player : MonoBehaviour
             transform.position = new Vector3(xValue, yPosBound, 0);
         }
     }
-
+    private void HandleLaserFire()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Instantiate(laserPrefab, transform.position, Quaternion.identity);
+        }
+        
+        
+    }
     #endregion
     
 }
+
