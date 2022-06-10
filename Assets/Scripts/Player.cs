@@ -25,6 +25,12 @@ public class Player : MonoBehaviour
     [SerializeField] private float yPosBound;
 
     [SerializeField] private GameObject laserPrefab;
+    [SerializeField] private Transform muzzleLocation;
+
+    private bool _canFire = true;
+
+    [SerializeField] private float cooldownTime;
+
 
     #endregion
 
@@ -33,19 +39,15 @@ public class Player : MonoBehaviour
     private void Start()
     {
         transform.position = Vector3.zero;
+        
     }
 
     private void Update()
     { 
         HandleMovement();
-       
-    }
-    
-    private void LateUpdate()
-    {
         HandleLaserFire();
     }
-
+    
     #endregion
 
     #region CustomMethods
@@ -90,13 +92,23 @@ public class Player : MonoBehaviour
     }
     private void HandleLaserFire()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && _canFire)
         {
-            Instantiate(laserPrefab, transform.position, Quaternion.identity);
+            _canFire = false;
+            Instantiate(laserPrefab, muzzleLocation.position, Quaternion.identity);
+            HandleCoolDown();
         }
-        
-        
     }
+    private void HandleCoolDown()
+    {
+        StartCoroutine(CoolDownRoutine(cooldownTime));
+    }
+    private IEnumerator CoolDownRoutine(float coolDown)
+    {
+        yield return new WaitForSeconds(coolDown);
+        _canFire = true;
+    }
+    
     #endregion
     
 }

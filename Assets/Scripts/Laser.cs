@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,15 +16,15 @@ public class Laser : MonoBehaviour
     #region UnityMethods
     void Start()
     {
-        Destroy(gameObject, .5f);
+        Destroy(gameObject, laserDestroyTime);   
     }
 
     // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
         transform.Translate(Vector3.up * (laserSpeed * Time.deltaTime));
     }
-
+    
     #endregion
   
 }
