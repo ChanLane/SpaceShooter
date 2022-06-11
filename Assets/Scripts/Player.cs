@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class Player : MonoBehaviour 
+public class Player : MonoBehaviour, IDamageable
 {
- 
     #region Variables
 
+    [Title("Movement")]
     [SerializeField] private float movementSpeed;
     // Start is called before the first frame update
 
@@ -24,12 +24,22 @@ public class Player : MonoBehaviour
     [FoldoutGroup("Player Bounds")]
     [SerializeField] private float yPosBound;
 
+    [Title("Combat")]
+    [Required]
     [SerializeField] private GameObject laserPrefab;
+    [Required]
     [SerializeField] private Transform muzzleLocation;
 
     private bool _canFire = true;
 
     [SerializeField] private float cooldownTime;
+    
+    [GUIColor(0,1,0)]
+    [SerializeField] private float maxHealth;
+    
+    [ReadOnly]
+    [GUIColor(0,1,0)]
+    [SerializeField] private float currentHealth;
 
 
     #endregion
@@ -39,15 +49,12 @@ public class Player : MonoBehaviour
     private void Start()
     {
         transform.position = Vector3.zero;
-        
     }
-
     private void Update()
     { 
         HandleMovement();
         HandleLaserFire();
     }
-    
     #endregion
 
     #region CustomMethods
@@ -94,9 +101,9 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && _canFire)
         {
-            _canFire = false;
-            Instantiate(laserPrefab, muzzleLocation.position, Quaternion.identity);
-            HandleCoolDown();
+             _canFire = false;
+             Instantiate(laserPrefab, muzzleLocation.position, Quaternion.identity);
+             HandleCoolDown();
         }
     }
     private void HandleCoolDown()
@@ -108,8 +115,15 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(coolDown);
         _canFire = true;
     }
-    
     #endregion
-    
+
+    #region InterfaceMethods
+
+    public void TakeDamage(float damageAmount)
+    {
+        currentHealth -= damageAmount;
+    }
+
+    #endregion
 }
 

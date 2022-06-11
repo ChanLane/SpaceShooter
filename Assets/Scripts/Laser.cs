@@ -11,6 +11,8 @@ public class Laser : MonoBehaviour
     [SerializeField] private float laserSpeed;
     [SerializeField] private float laserDestroyTime;
 
+    private float _currentDamage;
+
     #endregion
 
     #region UnityMethods
@@ -24,7 +26,13 @@ public class Laser : MonoBehaviour
     {
         transform.Translate(Vector3.up * (laserSpeed * Time.deltaTime));
     }
-    
+
+    private void OnTriggerEnter(Collider other)
+    {
+        var damageable =  other.GetComponent<IDamageable>();
+        damageable?.TakeDamage(_currentDamage);
+    }
+
     #endregion
   
 }
